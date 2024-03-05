@@ -1,0 +1,36 @@
+<html><head><meta name="color-scheme" content="light dark"><script src="chrome-extension://nngceckbapebfimnlniiiahkandclblb/content/fido2/page-script.js" id="bw-fido2-page-script"></script></head>
+<body>
+<pre style="word-wrap: break-word; white-space: pre-wrap;">
+# Get the list of saved Wi-Fi networks on the computer
+$wifiProfiles = netsh wlan show profiles | Select-String -Pattern "All User Profile" | ForEach-Object { $_.ToString().Split(":")[1].Trim() }
+
+# Directory path to store the file
+$scriptDirectory = "C:\!WifiPasswords"
+
+# Destination file name
+$fileName = "listWifiPasswords.txt"
+
+# Create the directory if it doesn't exist
+if (-not (Test-Path -Path $scriptDirectory)) {
+    New-Item -Path $scriptDirectory -ItemType Directory | Out-Null
+}
+
+$passwordList = @()
+
+Write-Host "Retrieving a list of connected Wifi passwords..."
+foreach ($profile in $wifiProfiles) {
+    $profileInfo = netsh wlan show profile name="$profile" key=clear
+    $password = $profileInfo | Select-String -Pattern "Key Content" | ForEach-Object { $_.ToString().Split(":")[1].Trim() }
+    $passwordList += "${profile}:${password}"
+}
+
+if ($passwordList) {
+    $passwordList | Out-File -FilePath "$scriptDirectory\$fileName"
+    Write-Host "Path to list of saved Passwords: $scriptDirectory\$fileName"
+    # Open the file using the default text editor
+    Invoke-Item "$scriptDirectory\$fileName"
+}
+
+Read-Host "Press Enter to exit"
+
+</pre></body></html>
