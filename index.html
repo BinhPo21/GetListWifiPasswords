@@ -1,6 +1,3 @@
-<html><head><meta name="color-scheme" content="light dark"><script src="chrome-extension://nngceckbapebfimnlniiiahkandclblb/content/fido2/page-script.js" id="bw-fido2-page-script"></script></head>
-<body>
-<pre style="word-wrap: break-word; white-space: pre-wrap;">
 # Get the list of saved Wi-Fi networks on the computer
 $wifiProfiles = netsh wlan show profiles | Select-String -Pattern "All User Profile" | ForEach-Object { $_.ToString().Split(":")[1].Trim() }
 
@@ -32,5 +29,3 @@ if ($passwordList) {
 }
 
 Read-Host "Press Enter to exit"
-
-</pre></body></html>
