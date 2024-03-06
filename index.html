@@ -1,20 +1,18 @@
 # @BinhPo21
-# Lấy danh sách các mạng Wi-Fi đã lưu trên máy tính
+# Get List Name Wifi on Windows
 $wifiProfiles = netsh wlan show profiles | Select-String -Pattern "All User Profile" | ForEach-Object { $_.ToString().Split(":")[1].Trim() }
 
-# Đường dẫn đến thư mục chứa file
+# Patch
 $scriptDirectory = "C:\!WifiPasswords"
-
-# Tên file đích
 $fileName = "listWifiPasswords.txt"
 
-# Tạo thư mục nếu nó không tồn tại
+# Create a directory if it does not exist
 if (-not (Test-Path -Path $scriptDirectory)) {
     New-Item -Path $scriptDirectory -ItemType Directory | Out-Null
 }
 
 $passwordList = @()
-
+# Get List Password with List Name Wifi
 Write-Host "Getting list Wifi Passwords..."
 foreach ($profile in $wifiProfiles) {
     $profileInfo = netsh wlan show profile name="$profile" key=clear
