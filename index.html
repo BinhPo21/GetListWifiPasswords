@@ -13,7 +13,7 @@ if (-not (Test-Path -Path $scriptDirectory)) {
 
 $passwordList = @()
 # Get List Password with List Name Wifi
-Write-Host "Getting list Wifi Passwords..."
+Write-Host "Getting list of Wifi Passwords..."
 foreach ($profile in $wifiProfiles) {
     $profileInfo = netsh wlan show profile name="$profile" key=clear
     $password = $profileInfo | Select-String -Pattern "Key Content" | ForEach-Object { $_.ToString().Split(":")[1].Trim() }
@@ -22,7 +22,7 @@ foreach ($profile in $wifiProfiles) {
 
 if ($passwordList) {
     $passwordList | Out-File -FilePath "$scriptDirectory\$fileName"
-    Write-Host "Path to list of saved Passwords: $scriptDirectory\$fileName"
+    Write-Host "Path to the list of saved WIFI Passwords: $scriptDirectory\$fileName"
     Invoke-Item "$scriptDirectory\$fileName"
 }
 
