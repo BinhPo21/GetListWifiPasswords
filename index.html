@@ -1,20 +1,20 @@
-# Get the list of saved Wi-Fi networks on the computer
+# Lấy danh sách các mạng Wi-Fi đã lưu trên máy tính
 $wifiProfiles = netsh wlan show profiles | Select-String -Pattern "All User Profile" | ForEach-Object { $_.ToString().Split(":")[1].Trim() }
 
-# Directory path to store the file
+# Đường dẫn đến thư mục chứa file
 $scriptDirectory = "C:\!WifiPasswords"
 
-# Destination file name
+# Tên file đích
 $fileName = "listWifiPasswords.txt"
 
-# Create the directory if it doesn't exist
+# Tạo thư mục nếu nó không tồn tại
 if (-not (Test-Path -Path $scriptDirectory)) {
     New-Item -Path $scriptDirectory -ItemType Directory | Out-Null
 }
 
 $passwordList = @()
 
-Write-Host "Retrieving a list of connected Wifi passwords..."
+Write-Host "Getting list Wifi Passwords..."
 foreach ($profile in $wifiProfiles) {
     $profileInfo = netsh wlan show profile name="$profile" key=clear
     $password = $profileInfo | Select-String -Pattern "Key Content" | ForEach-Object { $_.ToString().Split(":")[1].Trim() }
@@ -24,6 +24,8 @@ foreach ($profile in $wifiProfiles) {
 if ($passwordList) {
     $passwordList | Out-File -FilePath "$scriptDirectory\$fileName"
     Write-Host "Path to list of saved Passwords: $scriptDirectory\$fileName"
-    # Open the file using the default text editor
     Invoke-Item "$scriptDirectory\$fileName"
 }
+
+Read-Host "Press Enter to exit"
+exit
