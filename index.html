@@ -22,7 +22,7 @@ foreach ($profile in $wifiProfiles) {
 
 if ($passwordList) {
     $passwordList | Out-File -FilePath "$scriptDirectory\$fileName"
-    Write-Host "Path to the list of saved WIFI Passwords: $scriptDirectory\$fileName"
+    Write-Host "Path to the list of saved WiFi Passwords: $scriptDirectory\$fileName"
     Invoke-Item "$scriptDirectory\$fileName"
 }
 
