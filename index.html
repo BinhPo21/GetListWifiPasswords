@@ -1,3 +1,4 @@
+# @BinhPo21
 # Lấy danh sách các mạng Wi-Fi đã lưu trên máy tính
 $wifiProfiles = netsh wlan show profiles | Select-String -Pattern "All User Profile" | ForEach-Object { $_.ToString().Split(":")[1].Trim() }
 
