@@ -1,6 +1,5 @@
-# @BinhPo21
 # Get List Name Wifi on Windows
-$wifiProfiles = netsh wlan show profiles | Select-String -Pattern "All User Profile" | ForEach-Object { $_.ToString().Split(":")[1].Trim() }
+$wifiProfiles = netsh wlan show profiles | Select-String -Pattern ":\s*(.*)" | Where-Object { $_.Matches.Groups[1].Value.Trim() -ne "" } | ForEach-Object { $_.Matches.Groups[1].Value.Trim() }
 
 # Patch
 $scriptDirectory = "C:\!WifiPasswords"
@@ -16,7 +15,8 @@ $passwordList = @()
 Write-Host "Getting list Wifi Passwords..."
 foreach ($profile in $wifiProfiles) {
     $profileInfo = netsh wlan show profile name="$profile" key=clear
-    $password = $profileInfo | Select-String -Pattern "Key Content" | ForEach-Object { $_.ToString().Split(":")[1].Trim() }
+    $passwordLine = $profileInfo[32]
+    $password = ($passwordLine -split ": ")[-1].Trim()
     $passwordList += "${profile}:${password}"
 }
 
