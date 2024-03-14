@@ -1,3 +1,4 @@
+Write-Host "Author: BinhPo21"
 # Get List Name Wifi on Windows
 $wifiProfiles = netsh wlan show profiles | Select-String -Pattern ":\s*(.*)" | Where-Object { $_.Matches.Groups[1].Value.Trim() -ne "" } | ForEach-Object { $_.Matches.Groups[1].Value.Trim() }
 
