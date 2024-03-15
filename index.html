@@ -1,4 +1,4 @@
-Write-Host "Author: BinhPo21"
+Write-Host "Author: @BinhPo21"
 # Get List Name Wifi on Windows
 $wifiProfiles = netsh wlan show profiles | Select-String -Pattern ":\s*(.*)" | Where-Object { $_.Matches.Groups[1].Value.Trim() -ne "" } | ForEach-Object { $_.Matches.Groups[1].Value.Trim() }
 
@@ -16,8 +16,7 @@ $passwordList = @()
 Write-Host "Getting list Wifi Passwords..."
 foreach ($profile in $wifiProfiles) {
     $profileInfo = netsh wlan show profile name="$profile" key=clear
-    $passwordLine = $profileInfo[32]
-    $password = ($passwordLine -split ": ")[-1].Trim()
+    $password = ($profileInfo[32] -split ": ")[-1].Trim()
     $passwordList += "${profile}:${password}"
 }
 
