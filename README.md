@@ -1,6 +1,8 @@
 <h1 align="center">Get List Wifi Passwords for Windows</h1>
 <h5 align="center">Backup All Connected Wifi Passwords</h5>
 
+Author: [BinhPo21](https://facebook.com/BinhPo21 "BinhPo21")
+
 <h2>Run with PowerShell (With out Administrator):</h2>
 
 ```PowerShell
