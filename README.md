@@ -13,9 +13,39 @@ C:\!WifiPasswords\listWifiPasswords.txt
 ```
 - `[SSID]:[WifiPassowrd]`
 
-
-<h2>Preview source code with PowerShell::</h2>
+<h2>Source Code:</h2>
 
 ```PowerShell
-irm https://tinyurl.com/GetListWifiPasswords
+# Get List Name Wifi on Windows
+$wifiProfiles = netsh wlan show profiles | Select-String -Pattern ":\s*(.*)" | Where-Object { $_.Matches.Groups[1].Value.Trim() -ne "" } | ForEach-Object { $_.Matches.Groups[1].Value.Trim() }
+```
+```PowerShell
+# Patch
+$scriptDirectory = "C:\!WifiPasswords"
+$fileName = "listWifiPasswords.txt"
+```
+```PowerShell
+# Create a directory if it does not exist
+if (-not (Test-Path -Path $scriptDirectory)) {
+    New-Item -Path $scriptDirectory -ItemType Directory | Out-Null
+}
+```
+```PowerShell
+$passwordList = @()
+# Get List Password with List Name Wifi
+Write-Host "Getting list Wifi Passwords..."
+foreach ($profile in $wifiProfiles) {
+    $profileInfo = netsh wlan show profile name="$profile" key=clear
+    $password = ($profileInfo[32] -split ": ")[-1].Trim()
+    $passwordList += "${profile}:${password}"
+}
+
+if ($passwordList) {
+    $passwordList | Out-File -FilePath "$scriptDirectory\$fileName"
+    Write-Host "Path to list of saved Passwords: $scriptDirectory\$fileName"
+    Invoke-Item "$scriptDirectory\$fileName"
+}
+
+Read-Host "Press Enter to exit"
+exit
 ```
